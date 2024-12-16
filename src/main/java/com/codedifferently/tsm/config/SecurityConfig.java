@@ -22,7 +22,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final List<String> PUBLIC_APIS = List.of("/api/v1/auth/**");
+    public final List<String> PUBLIC_APIS = List.of("/api/v1/auth/**");
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
@@ -63,6 +63,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

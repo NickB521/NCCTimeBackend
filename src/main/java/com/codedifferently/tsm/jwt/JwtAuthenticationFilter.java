@@ -1,5 +1,6 @@
 package com.codedifferently.tsm.jwt;
 
+import com.codedifferently.tsm.config.SecurityConfig;
 import com.codedifferently.tsm.domain.service.impl.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.MalformedJwtException;
@@ -29,32 +31,40 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl detailsService;
 
+    @Autowired
+    private SecurityConfig securityConfig;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
-        String token = null;
-        String username = null;
+        // Check public APIs
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+        if (securityConfig.PUBLIC_APIS.stream().anyMatch(publicAPI -> pathMatcher.match(publicAPI, request.getRequestURI()))) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token;
+        String username;
 
         // Validate authentication header
-        if (authHeader != null) {
-            if (authHeader.startsWith("Bearer ")) {
-                token = authHeader.substring(7);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
 
-                try {
-                    username = jwtService.extractUsername(token);
+            try {
+                username = jwtService.extractUsername(token);
 
-                } catch (MalformedJwtException | SignatureException e) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    return;
-                }
-
-            } else {
+            } catch (MalformedJwtException | SignatureException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
+
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
 
         // Validate token
