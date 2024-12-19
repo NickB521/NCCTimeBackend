@@ -9,6 +9,11 @@ import com.codedifferently.tsm.domain.service.impl.AuthServiceImpl;
 import com.codedifferently.tsm.exception.ResourceCreationException;
 import com.codedifferently.tsm.jwt.JwtTokenProvider;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +24,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+@Tag(name = "Authentication", description = "Endpoints for user authentication and registration.")
 
 @Controller
 @RestController
@@ -44,6 +51,12 @@ public class AuthController {
         this.authService = authService;
     }
 
+
+    @Operation(summary = "Authenticate User", description = "Validates the user credentials and returns a JWT token.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authentication successful. JWT token returned."),
+            @ApiResponse(responseCode = "401", description = "Authentication failed. Invalid credentials.")
+    })
     @PutMapping
     ResponseEntity<AuthTokenDto> authenticate(@RequestBody AuthLoginDto loginDto) {
         // Authenticate login credentials
@@ -58,6 +71,12 @@ public class AuthController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Register User", description = "Registers a new user with the provided details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User registration successful."),
+            @ApiResponse(responseCode = "400", description = "Registration failed. Invalid input or user already exists.")
+    })
     @PostMapping
     ResponseEntity<String> register(@RequestBody AuthRegisterDto registerDto) throws ResourceCreationException {
         UserEntity user = authService.createUser(registerDto);
