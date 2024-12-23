@@ -133,8 +133,8 @@ class ApplicationTests {
 			@DisplayName("Get All Users Success")
 			void testGetAllUsersSuccess() {
 				List<UserDto> mockUsers = Arrays.asList(
-						createMockUserDto(1, "user1@example.com"),
-						createMockUserDto(2, "user2@example.com")
+						createMockUser(1, "user1@example.com"),
+						createMockUser(2, "user2@example.com")
 				);
 				when(userService.getAllUsers()).thenReturn(mockUsers);
 
@@ -143,13 +143,24 @@ class ApplicationTests {
 				assertEquals(HttpStatus.OK, response.getStatusCode());
 				assertEquals(2, response.getBody().size());
 			}
+			@Test
+			void testGetUserByIdNotFound() {
+				when(userService.getUser(999)).thenThrow(new ResourceNotFoundException("User not found"));
 
-			private UserDto createMockUserDto(int id, String email) {
+				ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+					userController.user(999);
+				});
+
+				assertEquals("User not found", exception.getMessage());
+			}
+
+			private UserDto createMockUser(int id, String email) {
 				UserDto dto = new UserDto();
 				dto.setId(id);
 				dto.setEmail(email);
 				return dto;
 			}
+
 		}
 	}
 }
