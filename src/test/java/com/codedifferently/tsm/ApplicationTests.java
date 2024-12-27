@@ -2,6 +2,7 @@ package com.codedifferently.tsm;
 
 import com.codedifferently.tsm.domain.controller.AuthController;
 import com.codedifferently.tsm.domain.controller.UserController;
+import com.codedifferently.tsm.domain.controller.WorksiteController;
 import com.codedifferently.tsm.domain.model.dto.*;
 import com.codedifferently.tsm.domain.model.entity.*;
 import com.codedifferently.tsm.domain.repository.UserRepository;
@@ -158,6 +159,53 @@ class ApplicationTests {
 				UserDto dto = new UserDto();
 				dto.setId(id);
 				dto.setEmail(email);
+				return dto;
+			}
+
+		}
+
+		@Nested
+		@DisplayName("User Controller Tests")
+		class WorksiteControllerTests {
+			@Mock
+			private WorksiteServiceImpl worksiteService;
+			private WorksiteController worksiteController;
+
+			@BeforeEach
+			void setUp() {
+				worksiteController = new WorksiteController(worksiteService);
+			}
+
+			@Test
+			@DisplayName("Get All Worksites Success")
+			void testGetAllWorksitesSuccess() {
+				List<WorksiteDto> mockWorksites = Arrays.asList(
+						createMockWorksite(1, "Code Differently"),
+						createMockWorksite(2, "Code Differently")
+				);
+				//when(worksiteService.getAllWorksites()).thenReturn(mockWorksites);
+
+				//TO DO: Adjust return statement in Worksite Controller to return WorksiteDto
+				//ResponseEntity<List<WorksiteDto>> response = worksiteController.all();
+
+				//assertEquals(HttpStatus.OK, response.getStatusCode());
+				//assertEquals(2, response.getBody().size());
+			}
+			@Test
+			void testGetWorksiteByIdNotFound() {
+				when(worksiteService.getWorksite(999)).thenThrow(new ResourceNotFoundException("Worksite not found"));
+
+				ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+					worksiteController.worksite(999);
+				});
+
+				assertEquals("Worksite not found", exception.getMessage());
+			}
+
+			private WorksiteDto createMockWorksite(int id, String name) {
+				WorksiteDto dto = new WorksiteDto();
+				dto.setWorksite_id(id);
+				dto.setWorksite_name(name);
 				return dto;
 			}
 
