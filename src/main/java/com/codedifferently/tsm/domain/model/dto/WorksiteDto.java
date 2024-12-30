@@ -6,6 +6,6 @@ import lombok.Data;
 public class WorksiteDto {
 
     private Integer id;
-
+    
     private String name;
 }

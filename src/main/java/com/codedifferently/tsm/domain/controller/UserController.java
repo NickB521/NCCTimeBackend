@@ -36,7 +36,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
