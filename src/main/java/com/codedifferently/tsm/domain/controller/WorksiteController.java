@@ -1,6 +1,6 @@
 package com.codedifferently.tsm.domain.controller;
 
-import com.codedifferently.tsm.domain.model.entity.WorksiteEntity;
+import com.codedifferently.tsm.domain.model.dto.WorksiteDto;
 import com.codedifferently.tsm.domain.service.impl.WorksiteServiceImpl;
 import com.codedifferently.tsm.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@ public class WorksiteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WorksiteEntity>> all() {return ResponseEntity.ok(worksiteService.getAllWorksites());}
+    public ResponseEntity<List<WorksiteDto>> all() {return ResponseEntity.ok(worksiteService.getAllWorksites());}
 
     @GetMapping("/{id}")
-    public ResponseEntity<WorksiteEntity> worksite(@PathVariable Integer id) {return ResponseEntity.ok(worksiteService.getWorksite(id));}
+    public ResponseEntity<WorksiteDto> worksite(@PathVariable Integer id) {return ResponseEntity.ok(worksiteService.getWorksite(id));}
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException exception) {

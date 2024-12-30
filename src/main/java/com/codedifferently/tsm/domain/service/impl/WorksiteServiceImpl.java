@@ -1,7 +1,6 @@
 package com.codedifferently.tsm.domain.service.impl;
 
 import com.codedifferently.tsm.domain.model.dto.WorksiteDto;
-import com.codedifferently.tsm.domain.model.entity.UserEntity;
 import com.codedifferently.tsm.domain.model.entity.WorksiteEntity;
 import com.codedifferently.tsm.domain.repository.WorksiteRepository;
 import com.codedifferently.tsm.domain.service.WorksiteService;
@@ -26,21 +25,20 @@ public class WorksiteServiceImpl implements WorksiteService {
     }
 
     @Override
-    public List<WorksiteEntity> getAllWorksites() {
+    public List<WorksiteDto> getAllWorksites() {
         List<WorksiteEntity> worksiteEntities = worksiteRepository.findAll();
 
-        return worksiteEntities;
+        return worksiteEntities.stream()
+        .map(this::mapSites)
+        .collect(Collectors.toList());
     }
 
     @Override
-    public WorksiteEntity getWorksite(Integer id) {
+    public WorksiteDto getWorksite(Integer id) {
         Optional<WorksiteEntity> worksite = worksiteRepository.findById(id);
         if (worksite.isEmpty()) throw new ResourceNotFoundException("Worksite not found");
 
-        return worksite.get();
-        // WorksiteEntity worksite = worksiteRepository.findById(id)
-        //         .orElseThrow(() -> new ResourceNotFoundException("Worksite not found"));
-        // return modelMapper.map(worksite, WorksiteDto.class);
+        return mapSites(worksite.get());
     }
 
     private WorksiteDto mapSites(WorksiteEntity worksiteEntity) {
