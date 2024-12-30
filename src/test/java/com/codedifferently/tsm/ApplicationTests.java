@@ -183,13 +183,12 @@ class ApplicationTests {
 						createMockWorksite(1, "Code Differently"),
 						createMockWorksite(2, "Code Differently")
 				);
-				//when(worksiteService.getAllWorksites()).thenReturn(mockWorksites);
+				when(worksiteService.getAllWorksites()).thenReturn(mockWorksites);
 
-				//TO DO: Adjust return statement in Worksite Controller to return WorksiteDto
-				//ResponseEntity<List<WorksiteDto>> response = worksiteController.all();
+				ResponseEntity<List<WorksiteDto>> response = worksiteController.all();
 
-				//assertEquals(HttpStatus.OK, response.getStatusCode());
-				//assertEquals(2, response.getBody().size());
+				assertEquals(HttpStatus.OK, response.getStatusCode());
+				assertEquals(2, response.getBody().size());
 			}
 			@Test
 			void testGetWorksiteByIdNotFound() {
@@ -204,8 +203,8 @@ class ApplicationTests {
 
 			private WorksiteDto createMockWorksite(int id, String name) {
 				WorksiteDto dto = new WorksiteDto();
-				dto.setWorksite_id(id);
-				dto.setWorksite_name(name);
+				dto.setId(id);
+				dto.setName(name);
 				return dto;
 			}
 
