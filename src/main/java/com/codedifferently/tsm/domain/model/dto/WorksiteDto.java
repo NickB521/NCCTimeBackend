@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class WorksiteDto {
 
-    private Integer worksite_id;
-    
-    private String worksite_name;
+    private Integer id;
+
+    private String name;
 }
