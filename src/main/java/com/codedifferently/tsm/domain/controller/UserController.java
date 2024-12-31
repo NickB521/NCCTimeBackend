@@ -71,6 +71,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getWorksiteUsers(id, getAuthorities()));
     }
 
+
     private Collection<GrantedAuthority> getAuthorities() {
         return SecurityContextHolder
                 .getContext()
@@ -87,6 +88,7 @@ public class UserController {
                 .getAuthentication()
                 .getName();
     }
+
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException exception) {
