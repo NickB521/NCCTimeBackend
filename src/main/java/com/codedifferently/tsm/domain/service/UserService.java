@@ -14,7 +14,12 @@ public interface UserService {
     List<UserDto> getAllUsers(Collection<GrantedAuthority> authorities)
             throws PermissionDeniedException;
 
+    UserDto getSelf(String email) throws ResourceNotFoundException;
+
     UserDto getUser(Integer id, Collection<GrantedAuthority> authorities)
+            throws PermissionDeniedException, ResourceNotFoundException;
+
+    UserDto getUser(String email, Collection<GrantedAuthority> authorities)
             throws PermissionDeniedException, ResourceNotFoundException;
 
     List<UserDto> getWorksiteUsers(Integer id, Collection<GrantedAuthority> authorities)
