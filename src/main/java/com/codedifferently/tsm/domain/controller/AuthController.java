@@ -57,7 +57,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Authentication successful. JWT token returned."),
             @ApiResponse(responseCode = "401", description = "Authentication failed. Invalid credentials.")
     })
-    @PutMapping
+    @GetMapping
     ResponseEntity<AuthTokenDto> authenticate(@RequestBody AuthLoginDto loginDto) {
         // Authenticate login credentials
         Authentication authentication = authenticationManager
