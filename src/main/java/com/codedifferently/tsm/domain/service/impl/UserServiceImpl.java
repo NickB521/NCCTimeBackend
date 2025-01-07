@@ -50,6 +50,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getSelf(String email) throws ResourceNotFoundException {
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) throw new ResourceNotFoundException("User not found");
+
+        return mapUser(user.get());
+    }
+
+    @Override
     public UserDto getUser(Integer id, Collection<GrantedAuthority> authorities)
             throws PermissionDeniedException, ResourceNotFoundException {
 
@@ -58,6 +66,20 @@ public class UserServiceImpl implements UserService {
         }
 
         Optional<UserEntity> user = userRepository.findById(id);
+        if (user.isEmpty()) throw new ResourceNotFoundException("User not found");
+
+        return mapUser(user.get());
+    }
+
+    @Override
+    public UserDto getUser(String email, Collection<GrantedAuthority> authorities)
+            throws PermissionDeniedException, ResourceNotFoundException {
+
+        if (authorities.stream().anyMatch(authority -> authority.getAuthority().equals("EMPLOYEE"))) {
+            throw new PermissionDeniedException("Permission denied");
+        }
+
+        Optional<UserEntity> user = userRepository.findByEmail(email);
         if (user.isEmpty()) throw new ResourceNotFoundException("User not found");
 
         return mapUser(user.get());

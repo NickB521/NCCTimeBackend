@@ -48,6 +48,17 @@ public class UserController {
     }
 
 
+    @Operation(summary = "Get Authorized User", description = "Fetches a specific user by their authorization token.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the user."),
+            @ApiResponse(responseCode = "400", description = "Invalid user email (Should never happen).")
+    })
+    @GetMapping("/self")
+    public ResponseEntity<UserDto> self() throws ResourceNotFoundException {
+        return ResponseEntity.ok(userService.getSelf(getEmail()));
+    }
+
+
     @Operation(summary = "Get User by ID", description = "Fetches a specific user by their ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the user."),
@@ -57,6 +68,18 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> user(@PathVariable Integer id) throws PermissionDeniedException, ResourceNotFoundException {
         return ResponseEntity.ok(userService.getUser(id, getAuthorities()));
+    }
+
+
+    @Operation(summary = "Get User by Email", description = "Fetches a specific user by their email.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the user."),
+            @ApiResponse(responseCode = "400", description = "Invalid user email."),
+            @ApiResponse(responseCode = "403", description = "Permission denied."),
+    })
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDto> email(@PathVariable String email) throws PermissionDeniedException, ResourceNotFoundException {
+        return ResponseEntity.ok(userService.getUser(email, getAuthorities()));
     }
 
 
