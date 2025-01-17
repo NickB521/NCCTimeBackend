@@ -57,7 +57,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Authentication successful. JWT token returned."),
             @ApiResponse(responseCode = "401", description = "Authentication failed. Invalid credentials.")
     })
-    @GetMapping
+    @PostMapping
     ResponseEntity<AuthTokenDto> authenticate(@RequestBody AuthLoginDto loginDto) {
         // Authenticate login credentials
         Authentication authentication = authenticationManager
@@ -77,7 +77,7 @@ public class AuthController {
             @ApiResponse(responseCode = "201", description = "User registration successful."),
             @ApiResponse(responseCode = "400", description = "Registration failed. Invalid input or user already exists.")
     })
-    @PostMapping
+    @PostMapping("/register")
     ResponseEntity<String> register(@RequestBody AuthRegisterDto registerDto) throws ResourceCreationException {
         UserEntity user = authService.createUser(registerDto);
         userRepository.save(user);
