@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,22 +27,20 @@ public class HolidayServiceImpl implements HolidayService {
     @Override
     public List<HolidayDto> getAllHolidays() {
         List<HolidayEntity> holidayEntities = holidayRepository.findAll();
-
         return holidayEntities.stream()
-                .map(this::mapHoliday)
+                .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public HolidayDto getHoliday(Integer id)
-            throws ResourceNotFoundException {
-        Optional<HolidayEntity> holiday = holidayRepository.findById(id);
-        if (holiday.isEmpty()) throw new ResourceNotFoundException("Holiday not found");
-
-        return mapHoliday(holiday.get());
+    public HolidayDto getHoliday(Integer id) throws ResourceNotFoundException {
+        HolidayEntity holidayEntity = holidayRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Holiday not found with id: " + id));
+        return mapToDto(holidayEntity);
     }
 
-    private HolidayDto mapHoliday(HolidayEntity holidayEntity) {
+
+    private HolidayDto mapToDto(HolidayEntity holidayEntity) {
         return modelMapper.map(holidayEntity, HolidayDto.class);
     }
 }

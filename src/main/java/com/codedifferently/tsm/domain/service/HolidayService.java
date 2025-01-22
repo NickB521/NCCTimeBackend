@@ -5,10 +5,9 @@ import com.codedifferently.tsm.exception.ResourceNotFoundException;
 
 import java.util.List;
 
+
 public interface HolidayService {
     List<HolidayDto> getAllHolidays();
 
-    HolidayDto getHoliday(Integer id)
-            throws ResourceNotFoundException;
-
+    HolidayDto getHoliday(Integer id) throws ResourceNotFoundException;
 }

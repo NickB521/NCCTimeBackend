@@ -8,20 +8,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "Holidays", description = "Endpoints for managing holiday information.")
-
-@Controller
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/holidays")
 public class HolidayController {
-
     private final HolidayServiceImpl holidayService;
 
     @Autowired
@@ -31,25 +28,31 @@ public class HolidayController {
 
     @Operation(summary = "Get All Holidays", description = "Fetches a list of all holidays.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of holidays."),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of holidays.")
     })
     @GetMapping
-    public ResponseEntity<List<HolidayDto>> all() {
-        return ResponseEntity.ok(holidayService.getAllHolidays());
+    public ResponseEntity<List<HolidayDto>> getAllHolidays() {
+        List<HolidayDto> holidays = holidayService.getAllHolidays();
+        return ResponseEntity.ok(holidays);
     }
 
-    @Operation(summary = "Get Holiday by ID", description = "Fetches a specific holiday by their ID.")
+    @Operation(summary = "Get Holiday by ID", description = "Fetches a specific holiday by its ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the holiday."),
-            @ApiResponse(responseCode = "400", description = "Invalid holiday ID."),
+            @ApiResponse(responseCode = "404", description = "Holiday not found.")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<HolidayDto> holiday(@PathVariable Integer id) throws ResourceNotFoundException {
-        return ResponseEntity.ok(holidayService.getHoliday(id));
+    public ResponseEntity<HolidayDto> getHolidayById(@PathVariable Integer id) {
+        try {
+            HolidayDto holiday = holidayService.getHoliday(id);
+            return ResponseEntity.ok(holiday);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
