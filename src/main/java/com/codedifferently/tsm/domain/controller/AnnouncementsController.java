@@ -3,20 +3,24 @@ package com.codedifferently.tsm.domain.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codedifferently.tsm.domain.model.dto.AnnouncementDto;
+import com.codedifferently.tsm.domain.model.dto.CreateAnnouncementDto;
 import com.codedifferently.tsm.domain.service.impl.AnnouncementsServiceImpl;
 import com.codedifferently.tsm.exception.ResourceNotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,6 +62,18 @@ public class AnnouncementsController {
     @GetMapping("/{id}")
     public ResponseEntity<AnnouncementDto> announcement(@PathVariable Integer id) throws ResourceNotFoundException {
         return ResponseEntity.ok(announcementsService.getAnnouncement(id));
+    }
+
+    @Operation(summary = "Get Announcement by id", description = "Fetches an announcement by their id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the announcement."),
+            @ApiResponse(responseCode = "400", description = "Invalid announcement id."),
+            @ApiResponse(responseCode = "403", description = "Permission denied."),
+    })
+    @PostMapping("/create")
+    public ResponseEntity<String> createAnnouncement(@RequestBody CreateAnnouncementDto createAnnouncementDto) throws ResourceNotFoundException {
+        announcementsService.createAnnouncement(createAnnouncementDto);
+        return new ResponseEntity<>("Success", HttpStatus.CREATED);
     }
 
 

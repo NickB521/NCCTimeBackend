@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.codedifferently.tsm.domain.model.dto.AnnouncementDto;
+import com.codedifferently.tsm.domain.model.dto.CreateAnnouncementDto;
 import com.codedifferently.tsm.domain.model.entity.AnnouncementEntity;
 import com.codedifferently.tsm.domain.repository.AnnouncementRepository;
 import com.codedifferently.tsm.domain.service.AnnouncementsService;
+import com.codedifferently.tsm.exception.ResourceCreationException;
 import com.codedifferently.tsm.exception.ResourceNotFoundException;
 
 @Service
@@ -42,6 +44,19 @@ public class AnnouncementsServiceImpl implements AnnouncementsService{
         if (announcement.isEmpty()) throw new ResourceNotFoundException("Announcement not found");
 
         return mapSites(announcement.get());
+    }
+
+    @Override
+    public AnnouncementEntity createAnnouncement(CreateAnnouncementDto createAnnouncementDto) throws ResourceCreationException{
+        
+        AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        //announcementEntity.setId(createAnnouncementDto.get);
+        announcementEntity.setApproved(createAnnouncementDto.getApproved());
+        announcementEntity.setMessage(createAnnouncementDto.getMessage());
+        announcementEntity.setTitle(createAnnouncementDto.getTitle());
+        //announcementEntity.setWorksite();
+        announcementEntity.setDateRange(createAnnouncementDto.getDateRange());
+        return announcementEntity;
     }
 
     private AnnouncementDto mapSites(AnnouncementEntity announcementEntity) {

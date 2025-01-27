@@ -7,9 +7,8 @@ import com.codedifferently.tsm.domain.model.entity.WorksiteEntity;
 import lombok.Data;
 
 @Data
-public class AnnouncementDto {
+public class CreateAnnouncementDto {
     private WorksiteEntity worksite;
-    private Integer id;
     private String title, message;
     private Date dateRange;
     private Boolean approved;
