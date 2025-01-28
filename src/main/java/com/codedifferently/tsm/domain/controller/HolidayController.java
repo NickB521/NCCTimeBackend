@@ -10,21 +10,27 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "Holidays", description = "Endpoints for managing holiday information.")
+
+@Controller
 @RestController
+
 @CrossOrigin
 @RequestMapping("/api/v1/holidays")
 public class HolidayController {
+
     private final HolidayServiceImpl holidayService;
 
     @Autowired
     public HolidayController(HolidayServiceImpl holidayService) {
         this.holidayService = holidayService;
     }
+
 
     @Operation(summary = "Get All Holidays", description = "Fetches a list of all holidays.")
     @ApiResponses(value = {
@@ -35,6 +41,7 @@ public class HolidayController {
         List<HolidayDto> holidays = holidayService.getAllHolidays();
         return ResponseEntity.ok(holidays);
     }
+
 
     @Operation(summary = "Get Holiday by ID", description = "Fetches a specific holiday by its ID.")
     @ApiResponses(value = {
@@ -51,8 +58,10 @@ public class HolidayController {
         }
     }
 
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
 }

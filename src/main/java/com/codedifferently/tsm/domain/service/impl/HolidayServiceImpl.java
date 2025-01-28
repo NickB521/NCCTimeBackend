@@ -43,4 +43,5 @@ public class HolidayServiceImpl implements HolidayService {
     private HolidayDto mapToDto(HolidayEntity holidayEntity) {
         return modelMapper.map(holidayEntity, HolidayDto.class);
     }
+
 }

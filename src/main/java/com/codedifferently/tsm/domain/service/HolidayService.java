@@ -7,7 +7,8 @@ import java.util.List;
 
 
 public interface HolidayService {
-    List<HolidayDto> getAllHolidays();
 
+    List<HolidayDto> getAllHolidays();
     HolidayDto getHoliday(Integer id) throws ResourceNotFoundException;
+
 }
