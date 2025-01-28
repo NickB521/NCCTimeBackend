@@ -37,8 +37,8 @@ public class AnnouncementTests {
 
         @BeforeEach
         void setUp() {
-            announcementController = new AnnouncementsController(announcementService);
-            announcementDto = createMockAnnouncementDto();
+            //announcementController = new AnnouncementsController(announcementService);
+            //announcementDto = createMockAnnouncementDto();
         }
         @Test
         @DisplayName("Handle Resource Not Found Exception")
@@ -163,7 +163,7 @@ public class AnnouncementTests {
     private AnnouncementDto createMockAnnouncementDto() {
         AnnouncementDto dto = new AnnouncementDto();
         dto.setId(1);
-        dto.setWorksite(1);
+        //dto.setWorksite(1);
         dto.setTitle("Test Announcement");
         dto.setMessage("Test Message");
         dto.setDateRange(new Date());

@@ -1,5 +1,6 @@
 package com.codedifferently.tsm.domain.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,11 +51,9 @@ public class AnnouncementsServiceImpl implements AnnouncementsService{
     public AnnouncementEntity createAnnouncement(CreateAnnouncementDto createAnnouncementDto) throws ResourceCreationException{
         
         AnnouncementEntity announcementEntity = new AnnouncementEntity();
-        //announcementEntity.setId(createAnnouncementDto.get);
         announcementEntity.setApproved(createAnnouncementDto.getApproved());
         announcementEntity.setMessage(createAnnouncementDto.getMessage());
         announcementEntity.setTitle(createAnnouncementDto.getTitle());
-        //announcementEntity.setWorksite();
         announcementEntity.setDateRange(createAnnouncementDto.getDateRange());
         return announcementEntity;
     }

@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codedifferently.tsm.domain.model.dto.AnnouncementDto;
 import com.codedifferently.tsm.domain.model.dto.CreateAnnouncementDto;
+import com.codedifferently.tsm.domain.model.entity.AnnouncementEntity;
+import com.codedifferently.tsm.domain.repository.AnnouncementRepository;
 import com.codedifferently.tsm.domain.service.impl.AnnouncementsServiceImpl;
+import com.codedifferently.tsm.exception.ResourceCreationException;
 import com.codedifferently.tsm.exception.ResourceNotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,10 +39,12 @@ public class AnnouncementsController {
     //TODO: Get ALL announcements, get 1 announcement, add announcement
 
     private final AnnouncementsServiceImpl announcementsService;
+    private final AnnouncementRepository announcementRepository;
 
     @Autowired
-    public AnnouncementsController(AnnouncementsServiceImpl announcementsService) {
+    public AnnouncementsController(AnnouncementsServiceImpl announcementsService, AnnouncementRepository announcementRepository) {
         this.announcementsService = announcementsService;
+        this.announcementRepository = announcementRepository;
     }
 
 
@@ -71,8 +76,11 @@ public class AnnouncementsController {
             @ApiResponse(responseCode = "403", description = "Permission denied."),
     })
     @PostMapping("/create")
-    public ResponseEntity<String> createAnnouncement(@RequestBody CreateAnnouncementDto createAnnouncementDto) throws ResourceNotFoundException {
-        announcementsService.createAnnouncement(createAnnouncementDto);
+    public ResponseEntity<String> createAnnouncement(@RequestBody CreateAnnouncementDto createAnnouncementDto) throws ResourceNotFoundException, ResourceCreationException {
+        System.out.println(createAnnouncementDto);
+        AnnouncementEntity announcement = announcementsService.createAnnouncement(createAnnouncementDto);
+        announcementRepository.save(announcement);
+
         return new ResponseEntity<>("Success", HttpStatus.CREATED);
     }
 
