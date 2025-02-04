@@ -34,11 +34,12 @@ public class AnnouncementTests {
         private AnnouncementsServiceImpl announcementService;
         private AnnouncementsController announcementController;
         private AnnouncementDto announcementDto;
+        private AnnouncementRepository announcementRepository;
 
         @BeforeEach
         void setUp() {
-            //announcementController = new AnnouncementsController(announcementService);
-            //announcementDto = createMockAnnouncementDto();
+            announcementController = new AnnouncementsController(announcementService, announcementRepository);
+            announcementDto = createMockAnnouncementDto();
         }
         @Test
         @DisplayName("Handle Resource Not Found Exception")
