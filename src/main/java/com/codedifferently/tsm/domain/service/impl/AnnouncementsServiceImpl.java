@@ -1,30 +1,35 @@
 package com.codedifferently.tsm.domain.service.impl;
 
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.codedifferently.tsm.domain.model.dto.AnnouncementDto;
 import com.codedifferently.tsm.domain.model.dto.CreateAnnouncementDto;
 import com.codedifferently.tsm.domain.model.entity.AnnouncementEntity;
 import com.codedifferently.tsm.domain.repository.AnnouncementRepository;
+import com.codedifferently.tsm.domain.repository.WorksiteRepository;
 import com.codedifferently.tsm.domain.service.AnnouncementsService;
+import com.codedifferently.tsm.exception.PermissionDeniedException;
 import com.codedifferently.tsm.exception.ResourceCreationException;
 import com.codedifferently.tsm.exception.ResourceNotFoundException;
 
 @Service
 public class AnnouncementsServiceImpl implements AnnouncementsService{
     private final AnnouncementRepository announcementRepository;
+    private final WorksiteRepository worksiteRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public AnnouncementsServiceImpl(AnnouncementRepository announcementRepository, ModelMapper modelMapper) {
+    public AnnouncementsServiceImpl(AnnouncementRepository announcementRepository, ModelMapper modelMapper, WorksiteRepository worksiteRepository) {
         this.announcementRepository = announcementRepository;
+        this.worksiteRepository = worksiteRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -48,9 +53,42 @@ public class AnnouncementsServiceImpl implements AnnouncementsService{
     }
 
     @Override
-    public AnnouncementEntity createAnnouncement(CreateAnnouncementDto createAnnouncementDto) throws ResourceCreationException{
+    public void deleteAnnouncement(Integer id, Collection<GrantedAuthority> authorities) throws ResourceNotFoundException, PermissionDeniedException {
+        if (authorities.stream().anyMatch(authority -> authority.getAuthority().equals("EMPLOYEE"))) {
+            throw new PermissionDeniedException("Permission denied");
+        }
+        
+        announcementRepository.deleteById(id);
+    }
+
+    @Override
+    public AnnouncementEntity updateAnnouncement(Integer id, CreateAnnouncementDto createAnnouncementDto, Collection<GrantedAuthority> authorities) throws ResourceCreationException, PermissionDeniedException, ResourceNotFoundException{
+        if (authorities.stream().anyMatch(authority -> authority.getAuthority().equals("EMPLOYEE"))) {
+            throw new PermissionDeniedException("Permission denied");
+        }
+        
+        AnnouncementEntity existingAnnoucement = announcementRepository.findById(id).get();
+        existingAnnoucement.setApproved(createAnnouncementDto.getApproved());
+        existingAnnoucement.setMessage(createAnnouncementDto.getMessage());
+        existingAnnoucement.setTitle(createAnnouncementDto.getTitle());
+        existingAnnoucement.setDateRange(createAnnouncementDto.getDateRange());
+
+        return announcementRepository.save(existingAnnoucement);
+    }
+
+
+    @Override
+    public AnnouncementEntity createAnnouncement(CreateAnnouncementDto createAnnouncementDto, Collection<GrantedAuthority> authorities) throws ResourceCreationException, PermissionDeniedException{
+        if (authorities.stream().anyMatch(authority -> authority.getAuthority().equals("EMPLOYEE"))) {
+            throw new PermissionDeniedException("Permission denied");
+        }
+        
         
         AnnouncementEntity announcementEntity = new AnnouncementEntity();
+        if (createAnnouncementDto.getWorksiteId()!= null && worksiteRepository.existsById(createAnnouncementDto.getWorksiteId())){
+            announcementEntity.setWorksite(worksiteRepository.getReferenceById(1));
+        }
+
         announcementEntity.setApproved(createAnnouncementDto.getApproved());
         announcementEntity.setMessage(createAnnouncementDto.getMessage());
         announcementEntity.setTitle(createAnnouncementDto.getTitle());
@@ -61,6 +99,4 @@ public class AnnouncementsServiceImpl implements AnnouncementsService{
     private AnnouncementDto mapSites(AnnouncementEntity announcementEntity) {
         return modelMapper.map(announcementEntity, AnnouncementDto.class);
     }
-
-
 }

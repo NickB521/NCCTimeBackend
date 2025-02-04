@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class CreateAnnouncementDto {
-    private Long worksiteId;
+    private Integer worksiteId;
     private String title, message;
     private Date dateRange;
     private Boolean approved;
