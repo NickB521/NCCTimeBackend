@@ -24,6 +24,7 @@ public class JwtTokenProvider {
 
     public JwtTokenProvider() {
         try {
+            //hmacsha256 is a keyed hash algorithm, using a hash based message auth code making it is really hard to crack
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGen.generateKey();
             secret = Base64.getEncoder().encodeToString(sk.getEncoded());
