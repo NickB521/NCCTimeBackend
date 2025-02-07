@@ -8,9 +8,11 @@ import lombok.Data;
 
 @Data
 public class AnnouncementDto {
+
     private WorksiteEntity worksite;
     private Integer id;
     private String title, message;
     private Date dateRange;
     private Boolean approved;
+
 }

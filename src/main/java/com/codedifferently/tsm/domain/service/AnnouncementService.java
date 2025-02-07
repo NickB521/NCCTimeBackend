@@ -12,7 +12,8 @@ import com.codedifferently.tsm.exception.PermissionDeniedException;
 import com.codedifferently.tsm.exception.ResourceCreationException;
 import com.codedifferently.tsm.exception.ResourceNotFoundException;
 
-public interface AnnouncementsService {
+public interface AnnouncementService {
+
     List<AnnouncementDto> getAllAnnouncements();
 
     AnnouncementDto getAnnouncement(Integer id)
@@ -21,9 +22,10 @@ public interface AnnouncementsService {
     void deleteAnnouncement(Integer id, Collection<GrantedAuthority> authorities) 
         throws ResourceNotFoundException, PermissionDeniedException;
 
-    AnnouncementEntity updateAnnouncement(Integer id, CreateAnnouncementDto createAnnouncementDto, Collection<GrantedAuthority> authorities) 
-        throws ResourceCreationException, PermissionDeniedException, ResourceNotFoundException;
+    void updateAnnouncement(Integer id, CreateAnnouncementDto createAnnouncementDto, Collection<GrantedAuthority> authorities)
+        throws ResourceNotFoundException, ResourceCreationException, PermissionDeniedException;
 
     AnnouncementEntity createAnnouncement(CreateAnnouncementDto createAnnouncementDto, Collection<GrantedAuthority> authorities)
             throws ResourceCreationException, PermissionDeniedException;
+
 }

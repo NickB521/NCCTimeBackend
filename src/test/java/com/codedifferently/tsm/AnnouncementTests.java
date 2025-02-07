@@ -1,11 +1,11 @@
 package com.codedifferently.tsm;
 
-import com.codedifferently.tsm.domain.controller.AnnouncementsController;
+import com.codedifferently.tsm.domain.controller.AnnouncementController;
 import com.codedifferently.tsm.domain.model.dto.AnnouncementDto;
 import com.codedifferently.tsm.domain.model.entity.AnnouncementEntity;
 import com.codedifferently.tsm.domain.model.entity.WorksiteEntity;
 import com.codedifferently.tsm.domain.repository.AnnouncementRepository;
-import com.codedifferently.tsm.domain.service.impl.AnnouncementsServiceImpl;
+import com.codedifferently.tsm.domain.service.impl.AnnouncementServiceImpl;
 import com.codedifferently.tsm.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,14 +31,14 @@ public class AnnouncementTests {
     @DisplayName("Announcement Controller Tests")
     class AnnouncementControllerTests {
         @Mock
-        private AnnouncementsServiceImpl announcementService;
-        private AnnouncementsController announcementController;
+        private AnnouncementServiceImpl announcementService;
+        private AnnouncementController announcementController;
         private AnnouncementDto announcementDto;
         private AnnouncementRepository announcementRepository;
 
         @BeforeEach
         void setUp() {
-            announcementController = new AnnouncementsController(announcementService, announcementRepository);
+            announcementController = new AnnouncementController(announcementService, announcementRepository);
             announcementDto = createMockAnnouncementDto();
         }
         @Test
@@ -111,7 +111,7 @@ public class AnnouncementTests {
         @Mock
         private ModelMapper modelMapper;
         @InjectMocks
-        private AnnouncementsServiceImpl announcementService;
+        private AnnouncementServiceImpl announcementService;
 
         private AnnouncementEntity announcementEntity;
         private AnnouncementDto announcementDto;

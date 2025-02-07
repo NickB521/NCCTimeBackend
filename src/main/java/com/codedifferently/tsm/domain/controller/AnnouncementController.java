@@ -9,21 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.codedifferently.tsm.domain.model.dto.AnnouncementDto;
 import com.codedifferently.tsm.domain.model.dto.CreateAnnouncementDto;
 import com.codedifferently.tsm.domain.model.entity.AnnouncementEntity;
 import com.codedifferently.tsm.domain.repository.AnnouncementRepository;
-import com.codedifferently.tsm.domain.service.impl.AnnouncementsServiceImpl;
+import com.codedifferently.tsm.domain.service.impl.AnnouncementServiceImpl;
 import com.codedifferently.tsm.exception.PermissionDeniedException;
 import com.codedifferently.tsm.exception.ResourceCreationException;
 import com.codedifferently.tsm.exception.ResourceNotFoundException;
@@ -40,13 +32,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
 @RequestMapping("/api/v1/announcements")
-public class AnnouncementsController {
+public class AnnouncementController {
 
-    private final AnnouncementsServiceImpl announcementsService;
+    private final AnnouncementServiceImpl announcementsService;
     private final AnnouncementRepository announcementRepository;
 
     @Autowired
-    public AnnouncementsController(AnnouncementsServiceImpl announcementsService, AnnouncementRepository announcementRepository) {
+    public AnnouncementController(AnnouncementServiceImpl announcementsService, AnnouncementRepository announcementRepository) {
         this.announcementsService = announcementsService;
         this.announcementRepository = announcementRepository;
     }
@@ -73,22 +65,37 @@ public class AnnouncementsController {
         return ResponseEntity.ok(announcementsService.getAnnouncement(id));
     }
 
-    @GetMapping("/delete/{id}")
+
+    @Operation(summary = "Delete Announcement by id", description = "Deletes an announcement by their id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully deleted the announcement."),
+            @ApiResponse(responseCode = "400", description = "Invalid announcement id."),
+            @ApiResponse(responseCode = "403", description = "Permission denied."),
+    })
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Integer id) throws ResourceNotFoundException, PermissionDeniedException {
         announcementsService.deleteAnnouncement(id, getAuthorities());
-        return new ResponseEntity<>("Succesfully deleted annoucnement", HttpStatus.OK);
+        return new ResponseEntity<>("Successfully deleted announcement", HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Update Announcement by id", description = "Updates an announcement by their id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated the announcement."),
+            @ApiResponse(responseCode = "400", description = "Invalid announcement id."),
+            @ApiResponse(responseCode = "403", description = "Permission denied."),
+    })
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody CreateAnnouncementDto createAnnouncementDto) throws ResourceCreationException, PermissionDeniedException {
-        AnnouncementEntity announcementEntity = announcementsService.updateAnnouncement(id, createAnnouncementDto, getAuthorities());
-        return new ResponseEntity<>("Update complete", HttpStatus.OK);
+        announcementsService.updateAnnouncement(id, createAnnouncementDto, getAuthorities());
+        return new ResponseEntity<>("Successfully updated announcement", HttpStatus.OK);
     }
 
-    @Operation(summary = "Create announcement w/ or w/o id", description = "Fetches an announcement by their id.")
+
+    @Operation(summary = "Create an announcement", description = "Creates an announcement.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully created the announcement."),
-            @ApiResponse(responseCode = "400", description = "Invalid announcement id."),
+            @ApiResponse(responseCode = "400", description = "Creation failed. Invalid input."),
             @ApiResponse(responseCode = "403", description = "Permission denied."),
     })
     @PostMapping("/create")
@@ -98,6 +105,7 @@ public class AnnouncementsController {
 
         return new ResponseEntity<>("Success", HttpStatus.CREATED);
     }
+
 
     private Collection<GrantedAuthority> getAuthorities() {
         return SecurityContextHolder
@@ -109,9 +117,20 @@ public class AnnouncementsController {
                 .toList();
     }
 
+
+    @ExceptionHandler(ResourceCreationException.class)
+    public ResponseEntity<String> handleResourceCreationException(ResourceCreationException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
-    
+
+    @ExceptionHandler(PermissionDeniedException.class)
+    public ResponseEntity<String> handlePermissionDeniedException(PermissionDeniedException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
 }
