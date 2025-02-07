@@ -32,7 +32,7 @@ public class HolidayTests {
         @BeforeEach
         void setUp() {
             holidayController = new HolidayController(holidayService);
-            holidayDto = createMockHoliday(1, "New Year's Day", "Federal Holiday", new Date());
+            holidayDto = createMockHoliday(1, "New Year's Day", "Federal Holiday", new Date(), new Date());
         }
 
         @Test
@@ -52,9 +52,9 @@ public class HolidayTests {
         @DisplayName("Get All Holidays - Multiple Holidays")
         void getAllHolidays_MultipleHolidays() {
             List<HolidayDto> holidays = Arrays.asList(
-                    createMockHoliday(1, "New Year's Day", "Federal Holiday", new Date()),
-                    createMockHoliday(2, "Christmas Day", "Federal Holiday", new Date()),
-                    createMockHoliday(3, "Independence Day", "Federal Holiday", new Date())
+                    createMockHoliday(1, "New Year's Day", "Federal Holiday", new Date(), new Date()),
+                    createMockHoliday(2, "Christmas Day", "Federal Holiday", new Date(), new Date()),
+                    createMockHoliday(3, "Independence Day", "Federal Holiday", new Date(), new Date())
             );
             when(holidayService.getAllHolidays()).thenReturn(holidays);
 
@@ -121,8 +121,8 @@ public class HolidayTests {
         @BeforeEach
         void setUp() {
             Date holidayDate = new Date();
-            holidayEntity = createMockHolidayEntity(1, "New Year's Day", "Federal Holiday", holidayDate);
-            holidayDto = createMockHoliday(1, "New Year's Day", "Federal Holiday", holidayDate);
+            holidayEntity = createMockHolidayEntity(1, "New Year's Day", "Federal Holiday", holidayDate, holidayDate);
+            holidayDto = createMockHoliday(1, "New Year's Day", "Federal Holiday", holidayDate, holidayDate);
         }
 
         @Test
@@ -140,8 +140,8 @@ public class HolidayTests {
         @DisplayName("Get All Holidays Service - Multiple Holidays")
         void getAllHolidays_MultipleHolidays() {
             List<HolidayEntity> entities = Arrays.asList(
-                    createMockHolidayEntity(1, "New Year's Day", "Federal Holiday", new Date()),
-                    createMockHolidayEntity(2, "Christmas Day", "Federal Holiday", new Date())
+                    createMockHolidayEntity(1, "New Year's Day", "Federal Holiday", new Date(), new Date()),
+                    createMockHolidayEntity(2, "Christmas Day", "Federal Holiday", new Date(), new Date())
             );
             when(holidayRepository.findAll()).thenReturn(entities);
             when(modelMapper.map(any(HolidayEntity.class), eq(HolidayDto.class)))
@@ -181,21 +181,25 @@ public class HolidayTests {
         }
     }
 
-    private static HolidayDto createMockHoliday(Integer id, String title, String type, Date dateRange) {
+    private static HolidayDto createMockHoliday(Integer id, String title, String type, Date start, Date end) {
         HolidayDto dto = new HolidayDto();
         dto.setId(id);
         dto.setTitle(title);
         dto.setType(type);
-        dto.setDateRange(dateRange);
+        dto.setStart(start);
+        dto.setEnd(end);
+
         return dto;
     }
 
-    private static HolidayEntity createMockHolidayEntity(Integer id, String title, String type, Date dateRange) {
+    private static HolidayEntity createMockHolidayEntity(Integer id, String title, String type, Date start, Date end) {
         HolidayEntity entity = new HolidayEntity();
         entity.setId(id);
         entity.setTitle(title);
         entity.setType(type);
-        entity.setDateRange(dateRange);
+        entity.setStart(start);
+        entity.setEnd(end);
+
         return entity;
     }
 

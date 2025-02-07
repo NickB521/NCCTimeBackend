@@ -28,8 +28,11 @@ public class AnnouncementEntity {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @Column(name = "date_range", nullable = false)
-    private Date dateRange;
+    @Column(name = "start", nullable = false)
+    private Date start;
+
+    @Column(name = "end", nullable = false)
+    private Date end;
 
     @Column(name = "approved")
     private Boolean approved;

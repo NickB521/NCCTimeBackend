@@ -24,7 +24,10 @@ public class HolidayEntity {
     @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name = "date_range", nullable = false)
-    private Date dateRange;
+    @Column(name = "start", nullable = false)
+    private Date start;
+
+    @Column(name = "end", nullable = false)
+    private Date end;
 
 }

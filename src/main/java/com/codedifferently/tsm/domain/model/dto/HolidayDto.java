@@ -6,8 +6,9 @@ import java.util.Date;
 
 @Data
 public class HolidayDto {
+
     private Integer id;
-    private String title;
-    private String type;
-    private Date dateRange;
+    private String title, type;
+    private Date start, end;
+
 }

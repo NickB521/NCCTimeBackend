@@ -14,6 +14,6 @@ public interface HolidayRepository extends JpaRepository<HolidayEntity, Integer>
 
     Optional<HolidayEntity> findByTitle(String title);
     List<HolidayEntity> findAllByType(String type);
-    List<HolidayEntity> findAllByDateRange(Date dateRange);
-
+    List<HolidayEntity> findAllByStart(Date start);
+    List<HolidayEntity> findAllByEnd(Date end);
 }
