@@ -42,12 +42,9 @@ public class WorksiteServiceImpl implements WorksiteService {
 
         Optional<WorksiteEntity> worksite = worksiteRepository.findById(id);
         if (worksite.isEmpty()) throw new ResourceNotFoundException("Worksite not found");
-
         return mapSites(worksite.get());
     }
 
-    private WorksiteDto mapSites(WorksiteEntity worksiteEntity) {
-        return modelMapper.map(worksiteEntity, WorksiteDto.class);
-    }
+    private WorksiteDto mapSites(WorksiteEntity worksiteEntity) {return modelMapper.map(worksiteEntity, WorksiteDto.class);}
 
 }

@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Worksites", description = "Endpoints for viewing worksite information.")
-
 @Controller
 @RestController
-
 @CrossOrigin
 @RequestMapping("/api/v1/worksites")
 public class WorksiteController {
