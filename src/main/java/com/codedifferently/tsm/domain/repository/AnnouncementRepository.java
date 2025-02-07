@@ -16,7 +16,8 @@ public interface AnnouncementRepository extends JpaRepository<AnnouncementEntity
     Optional<AnnouncementEntity> findByTitleContaining(String title);
 
     List<AnnouncementEntity> findAllByWorksite(WorksiteEntity worksite);
-    List<AnnouncementEntity> findAllByDateRange(Date dateRange);
+    List<AnnouncementEntity> findAllByStart(Date start);
+    List<AnnouncementEntity> findAllByEnd(Date end);
     List<AnnouncementEntity> findALlByApproved(Boolean approved);
 
 }
