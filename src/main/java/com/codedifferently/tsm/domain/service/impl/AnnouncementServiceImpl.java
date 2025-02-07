@@ -81,7 +81,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         existingAnnouncement.setApproved(createAnnouncementDto.getApproved());
         existingAnnouncement.setMessage(createAnnouncementDto.getMessage());
         existingAnnouncement.setTitle(createAnnouncementDto.getTitle());
-        existingAnnouncement.setDateRange(createAnnouncementDto.getDateRange());
+        existingAnnouncement.setStart(createAnnouncementDto.getStart());
+        existingAnnouncement.setEnd(createAnnouncementDto.getEnd());
 
         announcementRepository.save(existingAnnouncement);
     }
@@ -104,7 +105,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         announcementEntity.setApproved(createAnnouncementDto.getApproved());
         announcementEntity.setMessage(createAnnouncementDto.getMessage());
         announcementEntity.setTitle(createAnnouncementDto.getTitle());
-        announcementEntity.setDateRange(createAnnouncementDto.getDateRange());
+        announcementEntity.setStart(createAnnouncementDto.getStart());
+        announcementEntity.setEnd(createAnnouncementDto.getEnd());
 
         return announcementEntity;
     }

@@ -9,7 +9,7 @@ public class CreateAnnouncementDto {
 
     private Integer worksiteId;
     private String title, message;
-    private Date dateRange;
+    private Date start, end;
     private Boolean approved;
 
 }

@@ -9,6 +9,6 @@ public class HolidayDto {
 
     private Integer id;
     private String title, type;
-    private Date dateRange;
+    private Date start, end;
 
 }

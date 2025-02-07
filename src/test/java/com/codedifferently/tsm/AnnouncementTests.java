@@ -167,7 +167,8 @@ public class AnnouncementTests {
         //dto.setWorksite(1);
         dto.setTitle("Test Announcement");
         dto.setMessage("Test Message");
-        dto.setDateRange(new Date());
+        dto.setStart(new Date());
+        dto.setEnd(new Date());
         dto.setApproved(true);
         return dto;
     }
@@ -180,7 +181,8 @@ public class AnnouncementTests {
         entity.setWorksite(worksite);
         entity.setTitle("Test Announcement");
         entity.setMessage("Test Message");
-        entity.setDateRange(new Date());
+        entity.setStart(new Date());
+        entity.setEnd(new Date());
         entity.setApproved(true);
         return entity;
     }

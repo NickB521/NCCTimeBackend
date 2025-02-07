@@ -12,7 +12,7 @@ public class AnnouncementDto {
     private WorksiteEntity worksite;
     private Integer id;
     private String title, message;
-    private Date dateRange;
+    private Date start, end;
     private Boolean approved;
 
 }
